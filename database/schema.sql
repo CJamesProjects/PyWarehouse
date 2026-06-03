@@ -211,9 +211,7 @@ CREATE TABLE purchase_order_lines (
 
 -- STOCK MOVEMENTS
 
-CREATE TYPE movement_type AS ENUM (
-    'RECEIVE', 'DISPATCH', 'TRANSFER', 'ADJUSTMENT', 'RETURN', 'WRITE_OFF'
-);
+CREATE TYPE movement_type AS ENUM ('RECEIVE', 'DISPATCH', 'TRANSFER', 'ADJUSTMENT', 'RETURN', 'WRITE_OFF');
 
 CREATE TABLE stock_movements (
     id                 SERIAL PRIMARY KEY,
@@ -230,7 +228,35 @@ CREATE TABLE stock_movements (
     created_at         TIMESTAMPTZ   DEFAULT NOW()
 );
 
+-- TRANSFERS
 
+CREATE TYPE transfer_status AS ENUM ('PENDING', 'IN_TRANSIT', 'COMPLETED', 'CANCELLED');
+
+CREATE TABLE transfers (
+    id                 SERIAL PRIMARY KEY,
+    transfer_number    VARCHAR(50)     UNIQUE NOT NULL,
+    from_warehouse_id INTEGER         NOT NULL REFERENCES warehouses(id) ON DELETE RESTRICT,
+    to_warehouse_id   INTEGER         NOT NULL REFERENCES warehouses(id) ON DELETE RESTRICT,
+    status            transfer_status DEFAULT 'DRAFT',
+    expected_at       DATE,
+    completed_at      TIMESTAMPTZ,
+    created_by        INTEGER         REFERENCES users(id) ON DELETE RESTRICT,
+    notes             TEXT,
+    created_at        TIMESTAMPTZ     DEFAULT NOW(),
+    updated_at        TIMESTAMPTZ     DEFAULT NOW(),
+    CHECK (from_warehouse_id != to_warehouse_id)
+);
+
+CREATE TABLE transfer_lines (
+    id                 SERIAL PRIMARY KEY,
+    transfer_id        INTEGER     NOT NULL REFERENCES transfers(id) ON DELETE RESTRICT,
+    product_id         INTEGER     NOT NULL REFERENCES products(id) ON DELETE RESTRICT,
+    requested_qty      INTEGER     NOT NULL CHECK (requested_qty > 0),
+    transferred_qty    INTEGER     DEFAULT 0 CHECK (transferred_qty >= 0),
+    serialised_item_id INTEGER     REFERENCES serialised_items(id) ON DELETE RESTRICT,
+    batch_id           INTEGER     REFERENCES batches(id) ON DELETE RESTRICT,
+    created_at         TIMESTAMPTZ DEFAULT NOW()
+);
 
 
 -- To do
