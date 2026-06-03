@@ -108,7 +108,7 @@ CREATE TABLE stock (
 );
 
 -- SERIALISED ITEMS
--- SERIALISED products only      #assets
+-- SERIALISED items only      #assets
 
 CREATE TYPE serialised_status AS ENUM (
     'IN_STOCK', 'DISPATCHED', 'RETURNED', 'WRITE_OFF'
@@ -141,6 +141,7 @@ CREATE TABLE batches (
     lot_number       VARCHAR(100) NOT NULL,
     supplier_id      INTEGER      REFERENCES suppliers(id),
     manufacture_date DATE,
+    expiry_date      DATE,
     quantity         INTEGER      NOT NULL DEFAULT 0 CHECK (quantity >= 0),
     status           batch_status NOT NULL DEFAULT 'AVAILABLE',
     notes            TEXT,
@@ -180,8 +181,36 @@ CREATE TABLE order_lines (
     created_at         TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- PURCHASE ORDERS
+
+CREATE TYPE po_status AS ENUM ('DRAFT', 'SENT', 'PARTIAL', 'RECEIVED', 'CANCELLED');
+
+CREATE TABLE purchase_orders (
+    id           SERIAL PRIMARY KEY,
+    po_number    VARCHAR(50) UNIQUE NOT NULL,
+    supplier_id  INTEGER     NOT NULL REFERENCES suppliers(id) ON DELETE RESTRICT,
+    warehouse_id INTEGER     NOT NULL REFERENCES warehouses(id) ON DELETE RESTRICT,
+    status       po_status   DEFAULT 'DRAFT',
+    expected_at  DATE,
+    received_at  TIMESTAMPTZ,
+    created_by   INTEGER     REFERENCES users(id) ON DELETE RESTRICT,
+    notes        TEXT,
+    created_at   TIMESTAMPTZ DEFAULT NOW(),
+    updated_at   TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE purchase_order_lines (
+    id           SERIAL PRIMARY KEY,
+    po_id        INTEGER     NOT NULL REFERENCES purchase_orders(id) ON DELETE RESTRICT,
+    product_id   INTEGER     NOT NULL REFERENCES products(id) ON DELETE RESTRICT,
+    ordered_qty  INTEGER     NOT NULL CHECK (ordered_qty > 0),
+    received_qty INTEGER     DEFAULT 0 CHECK (received_qty >= 0),
+    unit_cost    NUMERIC(12,4),
+    created_at   TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- To do
--- - orders table? inbound left to do
+-- - inbound left to do
 -- - optional expiry date on batches?
 -- - reorder points varying across warehouses?
 -- - add an ON DELETE - possibly just restrict or soft delete
