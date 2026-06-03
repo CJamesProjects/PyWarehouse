@@ -149,8 +149,37 @@ CREATE TABLE batches (
     UNIQUE (product_id, lot_number)
 );
 
+
+
+
+CREATE TYPE order_status AS ENUM ('PENDING', 'PICKING', 'PACKED', 'DISPATCHED', 'CANCELLED');
+
+CREATE TABLE orders (
+    id            SERIAL PRIMARY KEY,
+    order_number  VARCHAR(50)  UNIQUE NOT NULL,
+    customer_ref  VARCHAR(100),
+    warehouse_id  INTEGER      NOT NULL REFERENCES warehouses(id) ON DELETE RESTRICT,
+    status        order_status DEFAULT 'PENDING',
+    required_by   DATE,
+    dispatched_at TIMESTAMPTZ,
+    created_by    INTEGER      REFERENCES users(id) ON DELETE RESTRICT,
+    notes         TEXT,
+    created_at    TIMESTAMPTZ  DEFAULT NOW(),
+    updated_at    TIMESTAMPTZ  DEFAULT NOW()
+);
+
+CREATE TABLE order_lines (
+    id                 SERIAL PRIMARY KEY,
+    order_id           INTEGER     NOT NULL REFERENCES orders(id) ON DELETE RESTRICT,
+    product_id         INTEGER     NOT NULL REFERENCES products(id) ON DELETE RESTRICT,
+    requested_qty      INTEGER     NOT NULL CHECK (requested_qty > 0),
+    picked_qty         INTEGER     DEFAULT 0 CHECK (picked_qty >= 0),
+    serialised_item_id INTEGER     REFERENCES serialised_items(id) ON DELETE RESTRICT,
+    batch_id           INTEGER     REFERENCES batches(id) ON DELETE RESTRICT,
+    created_at         TIMESTAMPTZ DEFAULT NOW()
+);
 -- To do
--- - orders table? inbound and outbound 
+-- - orders table? outbound left to do
 -- - optional expiry date on batches?
 -- - reorder points varying across warehouses?
 -- - add an ON DELETE - possibly just restrict or soft delete
