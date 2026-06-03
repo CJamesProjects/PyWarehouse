@@ -1,8 +1,4 @@
--- seed data for development and testing purposes only. It is not intended for production use.
-
--- =============================================================
--- PyWarehouse - Development Seed Data
--- =============================================================
+-- seed data for development and testing purposes
 
 -- Users
 INSERT INTO users (username, email, password_hash, full_name) VALUES

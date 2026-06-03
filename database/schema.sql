@@ -259,9 +259,43 @@ CREATE TABLE transfer_lines (
 );
 
 
+
+-- indexes for queries, adding many, can be altered later
+
+CREATE INDEX idx_products_sku          ON products(sku);
+CREATE INDEX idx_products_tracking     ON products(tracking_type);
+
+CREATE INDEX idx_stock_product         ON stock(product_id);
+CREATE INDEX idx_stock_location        ON stock(location_id);
+
+CREATE INDEX idx_serialised_product    ON serialised_items(product_id);
+CREATE INDEX idx_serialised_serial     ON serialised_items(serial_number);
+CREATE INDEX idx_serialised_status     ON serialised_items(status);
+
+CREATE INDEX idx_batches_product       ON batches(product_id);
+CREATE INDEX idx_batches_lot           ON batches(lot_number);
+CREATE INDEX idx_batches_status        ON batches(status);
+
+CREATE INDEX idx_movements_product     ON stock_movements(product_id);
+CREATE INDEX idx_movements_created     ON stock_movements(created_at);
+CREATE INDEX idx_movements_user        ON stock_movements(created_by);
+
+CREATE INDEX idx_orders_status         ON orders(status);
+CREATE INDEX idx_orders_warehouse      ON orders(warehouse_id);
+
+CREATE INDEX idx_po_status             ON purchase_orders(status);
+CREATE INDEX idx_po_supplier           ON purchase_orders(supplier_id);
+
+CREATE INDEX idx_transfers_status      ON transfers(status);
+CREATE INDEX idx_transfers_from        ON transfers(from_warehouse_id);
+CREATE INDEX idx_transfers_to          ON transfers(to_warehouse_id);
+
+CREATE INDEX idx_user_warehouse        ON user_warehouse_roles(user_id, warehouse_id);
+
+
+
 -- To do
 -- - reorder points varying across warehouses will change this after completing tables
 -- - go back and add ON DELETE for everything. mostly done
--- - add indexes for faster querying
 -- - add triggers, cant pick more than available stock, cant put serialised item into bulk stock
 -- - add views?
