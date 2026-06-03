@@ -234,9 +234,8 @@ CREATE TABLE stock_movements (
 
 
 -- To do
--- - movements between warehouses/locations separate from orders but similar
--- - reorder points varying across warehouses?
--- - add an ON DELETE - possibly just restrict or soft delete
+-- - reorder points varying across warehouses will change this after completing tables
+-- - go back and add ON DELETE for everything, mostly restrict
 -- - add indexes for faster querying
 -- - add triggers, cant pick more than available stock, cant put serialised item into bulk stock
 -- - add views?
