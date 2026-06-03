@@ -212,6 +212,6 @@ CREATE TABLE purchase_order_lines (
 -- To do
 -- - reorder points varying across warehouses?
 -- - add an ON DELETE - possibly just restrict or soft delete
--- - add updated_at triggers
 -- - add indexes for faster querying
 -- - add triggers, cant pick more than available stock, cant put serialised item into bulk stock
+-- - add views?
