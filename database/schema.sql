@@ -151,6 +151,7 @@ CREATE TABLE batches (
 
 
 
+-- OUTBOUND ORDERS
 
 CREATE TYPE order_status AS ENUM ('PENDING', 'PICKING', 'PACKED', 'DISPATCHED', 'CANCELLED');
 
@@ -178,8 +179,9 @@ CREATE TABLE order_lines (
     batch_id           INTEGER     REFERENCES batches(id) ON DELETE RESTRICT,
     created_at         TIMESTAMPTZ DEFAULT NOW()
 );
+
 -- To do
--- - orders table? outbound left to do
+-- - orders table? inbound left to do
 -- - optional expiry date on batches?
 -- - reorder points varying across warehouses?
 -- - add an ON DELETE - possibly just restrict or soft delete
