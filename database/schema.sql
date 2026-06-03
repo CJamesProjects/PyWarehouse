@@ -141,7 +141,7 @@ CREATE TABLE batches (
     lot_number       VARCHAR(100) NOT NULL,
     supplier_id      INTEGER      REFERENCES suppliers(id),
     manufacture_date DATE,
-    expiry_date      DATE,
+    expiry_date      DATE,        DEFAULT NULL,
     quantity         INTEGER      NOT NULL DEFAULT 0 CHECK (quantity >= 0),
     status           batch_status NOT NULL DEFAULT 'AVAILABLE',
     notes            TEXT,
@@ -210,8 +210,8 @@ CREATE TABLE purchase_order_lines (
 );
 
 -- To do
--- - inbound left to do
--- - optional expiry date on batches?
 -- - reorder points varying across warehouses?
 -- - add an ON DELETE - possibly just restrict or soft delete
 -- - add updated_at triggers
+-- - add indexes for faster querying
+-- - add triggers, cant pick more than available stock, cant put serialised item into bulk stock
