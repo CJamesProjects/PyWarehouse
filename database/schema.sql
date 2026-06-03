@@ -209,7 +209,32 @@ CREATE TABLE purchase_order_lines (
     created_at   TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- STOCK MOVEMENTS
+
+CREATE TYPE movement_type AS ENUM (
+    'RECEIVE', 'DISPATCH', 'TRANSFER', 'ADJUSTMENT', 'RETURN', 'WRITE_OFF'
+);
+
+CREATE TABLE stock_movements (
+    id                 SERIAL PRIMARY KEY,
+    movement_type      movement_type NOT NULL,
+    product_id         INTEGER       NOT NULL REFERENCES products(id) ON DELETE RESTRICT,
+    from_location      INTEGER       REFERENCES locations(id) ON DELETE RESTRICT,
+    to_location        INTEGER       REFERENCES locations(id) ON DELETE RESTRICT,
+    quantity           INTEGER       NOT NULL CHECK (quantity > 0),
+    reference_no       VARCHAR(100),
+    serialised_item_id INTEGER       REFERENCES serialised_items(id) ON DELETE RESTRICT,
+    batch_id           INTEGER       REFERENCES batches(id) ON DELETE RESTRICT,
+    created_by         INTEGER       REFERENCES users(id) ON DELETE RESTRICT,
+    notes              TEXT,
+    created_at         TIMESTAMPTZ   DEFAULT NOW()
+);
+
+
+
+
 -- To do
+-- - movements between warehouses/locations separate from orders but similar
 -- - reorder points varying across warehouses?
 -- - add an ON DELETE - possibly just restrict or soft delete
 -- - add indexes for faster querying
