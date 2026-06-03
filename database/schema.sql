@@ -69,7 +69,7 @@ CREATE TABLE suppliers (
 CREATE TABLE categories (
     id          SERIAL PRIMARY KEY,
     name        VARCHAR(100) NOT NULL,
-    parent_id   INTEGER      REFERENCES categories(id)
+    parent_id   INTEGER      REFERENCES categories(id),
     description TEXT,
     created_at  TIMESTAMPTZ  DEFAULT NOW()
 );
