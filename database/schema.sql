@@ -1,6 +1,6 @@
 -- USERS & PERMISSIONS
 
-CREATE TYPE user_role AS ENUM ('admin', 'manager', 'operative', 'read_only');
+CREATE TYPE user_role AS ENUM ('admin', 'manager', 'operative', 'read_only', 'no_access');
 
 CREATE TABLE users (
     id            SERIAL PRIMARY KEY,
@@ -40,7 +40,7 @@ CREATE TABLE user_warehouse_roles (
 
 CREATE TABLE locations (
     id           SERIAL PRIMARY KEY,
-    warehouse_id INTEGER     NOT NULL REFERENCES warehouses(id),
+    warehouse_id INTEGER     NOT NULL REFERENCES warehouses(id) ON DELETE CASCADE,
     aisle        VARCHAR(10) NOT NULL,
     bay          VARCHAR(10) NOT NULL,
     level        VARCHAR(10) NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE suppliers (
 CREATE TABLE categories (
     id          SERIAL PRIMARY KEY,
     name        VARCHAR(100) NOT NULL,
-    parent_id   INTEGER      REFERENCES categories(id),
+    parent_id   INTEGER      REFERENCES categories(id)
     description TEXT,
     created_at  TIMESTAMPTZ  DEFAULT NOW()
 );
@@ -141,7 +141,7 @@ CREATE TABLE batches (
     lot_number       VARCHAR(100) NOT NULL,
     supplier_id      INTEGER      REFERENCES suppliers(id),
     manufacture_date DATE,
-    expiry_date      DATE,        DEFAULT NULL,
+    expiry_date      DATE,
     quantity         INTEGER      NOT NULL DEFAULT 0 CHECK (quantity >= 0),
     status           batch_status NOT NULL DEFAULT 'AVAILABLE',
     notes            TEXT,
@@ -164,7 +164,7 @@ CREATE TABLE orders (
     status        order_status DEFAULT 'PENDING',
     required_by   DATE,
     dispatched_at TIMESTAMPTZ,
-    created_by    INTEGER      REFERENCES users(id) ON DELETE RESTRICT,
+    created_by    INTEGER      REFERENCES users(id) ON DELETE SET NULL,
     notes         TEXT,
     created_at    TIMESTAMPTZ  DEFAULT NOW(),
     updated_at    TIMESTAMPTZ  DEFAULT NOW()
@@ -193,7 +193,7 @@ CREATE TABLE purchase_orders (
     status       po_status   DEFAULT 'DRAFT',
     expected_at  DATE,
     received_at  TIMESTAMPTZ,
-    created_by   INTEGER     REFERENCES users(id) ON DELETE RESTRICT,
+    created_by   INTEGER     REFERENCES users(id) ON DELETE SET NULL,
     notes        TEXT,
     created_at   TIMESTAMPTZ DEFAULT NOW(),
     updated_at   TIMESTAMPTZ DEFAULT NOW()
@@ -230,7 +230,7 @@ CREATE TABLE stock_movements (
 
 -- TRANSFERS
 
-CREATE TYPE transfer_status AS ENUM ('PENDING', 'IN_TRANSIT', 'COMPLETED', 'CANCELLED');
+CREATE TYPE transfer_status AS ENUM ('DRAFT', 'PENDING', 'IN_TRANSIT', 'COMPLETED', 'CANCELLED');
 
 CREATE TABLE transfers (
     id                 SERIAL PRIMARY KEY,
@@ -240,7 +240,7 @@ CREATE TABLE transfers (
     status            transfer_status DEFAULT 'DRAFT',
     expected_at       DATE,
     completed_at      TIMESTAMPTZ,
-    created_by        INTEGER         REFERENCES users(id) ON DELETE RESTRICT,
+    created_by        INTEGER         REFERENCES users(id) ON DELETE SET NULL,
     notes             TEXT,
     created_at        TIMESTAMPTZ     DEFAULT NOW(),
     updated_at        TIMESTAMPTZ     DEFAULT NOW(),
@@ -261,7 +261,7 @@ CREATE TABLE transfer_lines (
 
 -- To do
 -- - reorder points varying across warehouses will change this after completing tables
--- - go back and add ON DELETE for everything, mostly restrict
+-- - go back and add ON DELETE for everything. mostly done
 -- - add indexes for faster querying
 -- - add triggers, cant pick more than available stock, cant put serialised item into bulk stock
 -- - add views?
