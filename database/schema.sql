@@ -260,7 +260,7 @@ CREATE TABLE transfer_lines (
 
 
 
--- indexes for queries, adding many, can be altered later
+-- INDEXES for queries, adding many, can be altered later
 
 CREATE INDEX idx_products_sku          ON products(sku);
 CREATE INDEX idx_products_tracking     ON products(tracking_type);
@@ -293,9 +293,62 @@ CREATE INDEX idx_transfers_to          ON transfers(to_warehouse_id);
 CREATE INDEX idx_user_warehouse        ON user_warehouse_roles(user_id, warehouse_id);
 
 
+-- TRIGGERS
+-- UPDATED AT
+
+CREATE OR REPLACE FUNCTION set_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_users_updated_at
+    BEFORE UPDATE ON users
+    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE TRIGGER trg_warehouses_updated_at
+    BEFORE UPDATE ON warehouses
+    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE TRIGGER trg_suppliers_updated_at
+    BEFORE UPDATE ON suppliers
+    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE TRIGGER trg_products_updated_at
+    BEFORE UPDATE ON products
+    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE TRIGGER trg_stock_updated_at
+    BEFORE UPDATE ON stock
+    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE TRIGGER trg_serialised_items_updated_at
+    BEFORE UPDATE ON serialised_items
+    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE TRIGGER trg_batches_updated_at
+    BEFORE UPDATE ON batches
+    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE TRIGGER trg_purchase_orders_updated_at
+    BEFORE UPDATE ON purchase_orders
+    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE TRIGGER trg_orders_updated_at
+    BEFORE UPDATE ON orders
+    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+CREATE TRIGGER trg_transfers_updated_at
+    BEFORE UPDATE ON transfers
+    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+
+
+
+
 
 -- To do
 -- - reorder points varying across warehouses will change this after completing tables
--- - go back and add ON DELETE for everything. mostly done
--- - add triggers, cant pick more than available stock, cant put serialised item into bulk stock
+-- - add triggers, done update triggers to add - cant pick more than available stock, cant put serialised item into bulk stock
 -- - add views?
