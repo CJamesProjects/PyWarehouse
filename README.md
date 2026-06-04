@@ -3,16 +3,14 @@ A warehouse management system built with Python and PostgreSQL, containerised wi
 
 
 > **Note:** This project is currently under active development. 
-> The database schema is being added and the API is not yet implemented.
 > The project was created as an example project in my current professional domain
-> This README will be expanded upon with a dependancy stack alongside the Poetry and quickstart instructions
-
+> Database schema is complete and tested. Currently working on Python models and API layer.
 
 
 ## To Do
 
 - [x] Add database schema file
-- [ ] Add seed data file
+- [x] Add seed data file
 - [ ] Create first database migration with Alembic
 - [ ] Create product model
 - [ ] Create stock model
@@ -25,12 +23,42 @@ A warehouse management system built with Python and PostgreSQL, containerised wi
 
 
 
+project tree:
 
-
-
-
-
-## Development Progress
-
-### v0.1
-- 
+C:.
+│   .env.example
+│   .gitignore
+│   poetry.lock
+│   pyproject.toml
+│   README.md
+│   
+├───database
+│   │   schema.sql
+│   │   
+│   └───seeds
+│           dev_seed.sql
+│           
+├───docker
+│       docker-compose.yml
+│       
+├───src
+│   │   __init__.py
+│   │   
+│   ├───api
+│   │       __init__.py
+│   │       
+│   ├───models
+│   │       __init__.py
+│   │       
+│   └───services
+│           __init__.py
+│           
+└───tests
+    │   __init__.py
+    │   
+    ├───integration
+    │       __init__.py
+    │       
+    └───unit
+            __init__.py
+            
