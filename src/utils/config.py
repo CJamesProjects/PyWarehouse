@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     db_port:              int      = 5432
     db_name:              str      = "pywarehouse"
     db_user:              str      = "pywarehouse_user"
-    db_password:          str      = "changeme"
+    db_password:          str      = "changeme"       # default pass from docker please ,update
     database_url_override: str | None = None
 
     # App
