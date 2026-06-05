@@ -11,9 +11,9 @@ A warehouse management system built with Python and PostgreSQL, containerised wi
 
 - [x] Add database schema file
 - [x] Add seed data file
-- [ ] Create first database migration with Alembic
 - [ ] Create product model
 - [ ] Create stock model
+- [ ] Create first database migration with Alembic
 - [ ] Add first API route - list products
 - [ ] Add first API route - get single product
 - [ ] Write first unit test
