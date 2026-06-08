@@ -103,6 +103,7 @@ CREATE TABLE stock (
     product_id  INTEGER     NOT NULL REFERENCES products(id),
     location_id INTEGER     NOT NULL REFERENCES locations(id),
     quantity    INTEGER     NOT NULL DEFAULT 0 CHECK (quantity >= 0),
+    created_at  TIMESTAMPTZ DEFAULT NOW(),
     updated_at  TIMESTAMPTZ DEFAULT NOW(),
     UNIQUE (product_id, location_id)
 );

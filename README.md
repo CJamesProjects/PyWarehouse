@@ -3,8 +3,9 @@ A warehouse management system built with Python and PostgreSQL, containerised wi
 
 
 > **Note:** This project is currently under active development. 
-> The project was created as an example project in my current professional domain
-> Database schema is complete and tested. Currently working on Python models and API layer.
+> The project was created as an example project in my current professional domain.
+> Database schema is complete and tested.
+> **Note:** Currently working on Python models and API layer.
 
 
 ## To Do
