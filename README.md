@@ -1,65 +1,83 @@
-# PyWarehouse
+# PyWarehouse 📦
 A warehouse management system built with Python and PostgreSQL, containerised with Docker. Designed for inventory tracking, stock movement, and operational reporting.
 
-
-> **Note:** This project is currently under active development. 
-> The project was created as an example project in my current professional domain.
-> Database schema is complete and tested.
-> **Note:** Currently working on Python models and API layer.
-
+> **Note:** This project is currently under active development, created as a portfolio project in my professional domain.
+> Database schema, ORM models, core business logic and initial API layer are complete.
+> Currently expanding the API layer and adding tests. #just finished these
 
 ## To Do
-
 - [x] Add database schema file
 - [x] Add seed data file
-- [ ] Create product model
-- [ ] Create stock model
+- [x] Create ORM models for all inventory types
+- [x] Add first API route - list products
+- [x] Add first API route - get single product
+- [x] Write first unit tests
+- [x] Connect API to database
 - [ ] Create first database migration with Alembic
-- [ ] Add first API route - list products
-- [ ] Add first API route - get single product
-- [ ] Write first unit test
-- [ ] Connect API to database
-- [ ] Add basic error handling
-- [ ] Add data validation
+- [ ] Add stock level endpoints
+- [ ] Add receive, dispatch and transfer endpoints
+- [ ] Add purchase order endpoints
+- [ ] Add outbound order endpoints
+- [ ] Add data validation with Pydantic schemas
+- [ ] Add basic error handling middleware
+- [ ] Add authentication
 
+## API
+| Method | Endpoint | Description | Status |
+|---|---|---|---|
+| GET | `/` | API info | ✅ |
+| GET | `/health` | Health check | ✅ |
+| GET | `/products` | List all products | ✅ |
+| GET | `/products/{id}` | Get single product | ✅ |
+| GET | `/stock` | Current stock levels | 🔜 |
+| POST | `/stock/receive` | Receive stock | 🔜 |
+| POST | `/stock/dispatch` | Dispatch stock | 🔜 |
+| POST | `/stock/transfer` | Transfer between locations | 🔜 |
+| GET | `/stock/low` | Low stock alerts | 🔜 |
 
-
-project tree:
-
-C:.
+## Project Structure
 │   .env.example
 │   .gitignore
 │   poetry.lock
 │   pyproject.toml
 │   README.md
-│   
+│
 ├───database
 │   │   schema.sql
-│   │   
+│   │
 │   └───seeds
 │           dev_seed.sql
-│           
+│
 ├───docker
 │       docker-compose.yml
-│       
+│
 ├───src
-│   │   __init__.py
-│   │   
+│   │   init.py
+│   │   main.py
+│   │
 │   ├───api
-│   │       __init__.py
-│   │       
+│   │       init.py
+│   │       products.py
+│   │
 │   ├───models
-│   │       __init__.py
-│   │       
-│   └───services
-│           __init__.py
-│           
-└───tests
-    │   __init__.py
-    │   
-    ├───integration
-    │       __init__.py
-    │       
-    └───unit
-            __init__.py
-            
+│   │       init.py
+│   │       inventory.py
+│   │
+│   ├───services
+│   │       init.py
+│   │       stock_service.py
+│   │
+│   └───utils
+│           init.py
+│           config.py
+│           database.py
+│
+├───tests
+│   test_stock_service.py
+│   init.py
+│
+├───integration
+│       init.py
+│
+└───unit
+init.py
