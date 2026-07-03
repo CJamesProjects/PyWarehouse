@@ -25,15 +25,15 @@ A warehouse management system built with Python and PostgreSQL, containerised wi
 ## API
 | Method | Endpoint | Description | Status |
 |---|---|---|---|
-| GET | `/` | API info | ✅ |
-| GET | `/health` | Health check | ✅ |
-| GET | `/products` | List all products | ✅ |
-| GET | `/products/{id}` | Get single product | ✅ |
-| GET | `/stock` | Current stock levels | 🔜 |
-| POST | `/stock/receive` | Receive stock | 🔜 |
-| POST | `/stock/dispatch` | Dispatch stock | 🔜 |
-| POST | `/stock/transfer` | Transfer between locations | 🔜 |
-| GET | `/stock/low` | Low stock alerts | 🔜 |
+| GET | `/` | API info | x |
+| GET | `/health` | Health check | x |
+| GET | `/products` | List all products | x |
+| GET | `/products/{id}` | Get single product | x |
+| GET | `/stock` | Current stock levels | o |
+| POST | `/stock/receive` | Receive stock | o |
+| POST | `/stock/dispatch` | Dispatch stock | o |
+| POST | `/stock/transfer` | Transfer between locations | o |
+| GET | `/stock/low` | Low stock alerts | o |
 
 ## Project Structure
 │   .env.example
