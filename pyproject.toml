@@ -16,3 +16,7 @@ pydantic-settings = "^2.0"
 fastapi = "^0.111"
 uvicorn = { extras = ["standard"], version = "^0.29" }
 python-dotenv = "^1.0"
+[dependency-groups]
+dev = [
+    "pytest (>=9.1.1,<10.0.0)"
+]
